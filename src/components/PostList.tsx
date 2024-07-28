@@ -8,10 +8,13 @@ export default function PostList({ hasNavigation = true }: Props) {
   return (
     <>
       {hasNavigation && (
-        <div className="post__navigation">
-          <div className="post__navigation--active">전체</div>
-          <div>나의 글</div>
-        </div>
+        <>
+          <div className="post__navigation">
+            <div className="post__navigation--active">전체</div>
+            <div>나의 글</div>
+          </div>
+          <hr className="line-gray" />
+        </>
       )}
 
       <div className="post__list">

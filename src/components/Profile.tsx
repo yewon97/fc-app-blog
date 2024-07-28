@@ -15,7 +15,7 @@ export default function Profile() {
           Logout
         </Link>
       </div>
-      <hr className="profile__line" />
+      <hr className="line-gray" />
     </>
   );
 }

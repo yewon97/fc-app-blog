@@ -72,7 +72,7 @@ footer {
   font-size: 16px;
   color: gray;
   cursor: pointer;
-  padding: 48px 20px 0 20px;
+  padding: 48px 20px 20px 20px;
 
   .post__navigation--active {
     color: black;
@@ -219,11 +219,12 @@ footer {
   }
 }
 
-.profile__line {
+hr.line-gray {
   background: #f2f2f2;
   height: 1px;
   border: 0;
   max-width: 680px;
+  margin: 0 auto;
 }
 
 .flex__box-lg {
