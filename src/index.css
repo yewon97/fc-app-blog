@@ -16,11 +16,16 @@ code {
 header {
   display: flex;
   justify-content: space-between;
-  flex-direction: row-reverse;
   border-bottom: 1px solid #f2f2f2;
   padding: 10px 40px;
   min-height: 40px;
   align-items: center;
+
+  .header__logo {
+    color: black;
+    font-weight: 600;
+    font-size: 18px;
+  }
 
   a {
     margin: 0 10px;
@@ -82,8 +87,9 @@ footer {
   }
 }
 
-/* post list */
-.post__list {
+/* post list, post detail */
+.post__list,
+.post__detail {
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -149,5 +155,27 @@ footer {
     &:hover {
       color: black;
     }
+  }
+}
+
+.post__detail {
+  .post__title {
+    font-size: 36px;
+    line-height: 40px;
+  }
+
+  .post__utils-box {
+    padding: 10px 0;
+    border-top: 1px solid #f2f2f2;
+    border-bottom: 1px solid #f2f2f2;
+    flex-direction: row;
+  }
+
+  .post__profile-box {
+    padding: 10px 0;
+  }
+
+  .post__text {
+    padding: 20px 0;
   }
 }
