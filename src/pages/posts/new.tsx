@@ -1,3 +1,12 @@
+import Footer from "../../components/Footer";
+import Header from "../../components/Header";
+
 export default function PostNew() {
-  return <div>PostNew Page</div>;
+  return (
+    <>
+      <Header />
+      <div>PostForm</div>
+      <Footer />
+    </>
+  );
 }
