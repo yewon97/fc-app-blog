@@ -1,3 +1,11 @@
+import PostForm from "@/components/PostForm";
+import Header from "@components/Header";
+
 export default function PostEdit() {
-  return <div>PostEdit Page</div>;
+  return (
+    <>
+      <Header />
+      <PostForm />
+    </>
+  );
 }
