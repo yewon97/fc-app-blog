@@ -35,7 +35,7 @@ export default function PostList({ hasNavigation = true }: Props) {
       )}
 
       <div className="post__list">
-        {[...Array(10)].map((e, idx) => (
+        {[...Array(11)].map((e, idx) => (
           <div key={idx} className="post__box">
             <Link to={`/posts/${idx}`}>
               <div className="post__profile-box">
