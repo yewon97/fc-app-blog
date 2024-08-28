@@ -458,7 +458,7 @@ input:checked + .carousel__slide-container .nav label {
 }
 
 .form__error {
-  color: red;
+  color: #f00;
 }
 
 .form select {
