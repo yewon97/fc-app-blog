@@ -3,8 +3,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@pages/*": ["src/pages/*"]
+      "@/components/*": ["src/components/*"],
+      "@/firebaseApp/*": ["src/firebaseApp/*"],
+      "@/pages/*": ["src/pages/*"]
     }
   }
 }
