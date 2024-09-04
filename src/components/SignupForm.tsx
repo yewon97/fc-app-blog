@@ -2,6 +2,7 @@ import { app } from "@/firebaseApp";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 type FormType = {
   email: string;
@@ -29,8 +30,11 @@ export default function SignupForm() {
       );
       const user = userCredential.user;
       console.log(user);
-    } catch (error) {
+
+      toast.success("회원가입에 성공했습니다.");
+    } catch (error: any) {
       console.log(error);
+      toast.error(error?.code);
     }
   };
 
