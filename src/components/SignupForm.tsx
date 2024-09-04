@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { toast } from "react-toastify";
 
@@ -14,6 +14,7 @@ type FormType = {
 };
 
 export default function SignupForm() {
+  const navigate = useNavigate();
   const [error, setError] = useState<string>("");
   const [form, setForm] = useState<FormType>({
     email: "",
@@ -31,10 +32,9 @@ export default function SignupForm() {
         form.email,
         form.password,
       );
-      const user = userCredential.user;
-      console.log(user);
 
       toast.success("회원가입에 성공했습니다.");
+      navigate("/");
     } catch (error: any) {
       console.log(error);
       toast.error(error?.code);

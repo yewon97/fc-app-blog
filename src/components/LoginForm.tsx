@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { app } from "@/firebaseApp";
@@ -16,6 +16,7 @@ export default function LoginForm() {
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,10 +28,9 @@ export default function LoginForm() {
         form.email,
         form.password,
       );
-      const user = userCredential.user;
-      console.log(user);
 
       toast.success("로그인에 성공했습니다.");
+      navigate("/");
     } catch (error: any) {
       console.log(error);
       toast.error(error?.code);
