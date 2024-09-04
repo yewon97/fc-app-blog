@@ -1,8 +1,11 @@
+import React, { useState } from "react";
+
+import { Link } from "react-router-dom";
+
+import { toast } from "react-toastify";
+
 import { app } from "@/firebaseApp";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
 
 type FormType = {
   email: string;
