@@ -13,9 +13,12 @@ export const AuthContextProvider = ({
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
     });
+
+    // 클린업 함수 추가
+    return () => unsubscribe();
   }, [auth]);
 
   return (
