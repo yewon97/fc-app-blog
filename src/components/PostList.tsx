@@ -1,6 +1,6 @@
 import { AuthContext } from "@/context/AuthContext";
 import { db } from "@/firebaseApp";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -74,7 +74,7 @@ export default function PostList({ hasNavigation = true }: Props) {
                     <div className="post__date">{post.createAt}</div>
                   </div>
                   <div className="post__title">{post.title}</div>
-                  <div className="post__text">{post.content}</div>
+                  <div className="post__text">{post.summary}</div>
                 </Link>
                 {post.email === user?.email && (
                   <div className="post__utils-box">

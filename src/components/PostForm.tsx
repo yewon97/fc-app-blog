@@ -1,7 +1,7 @@
 import { AuthContext } from "@/context/AuthContext";
 import { db } from "@/firebaseApp";
 import { addDoc, collection } from "firebase/firestore";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -44,10 +44,6 @@ export default function PostForm() {
       toast.error("게시글 작성에 실패했습니다.");
     }
   };
-
-  useEffect(() => {
-    console.log(postForm);
-  }, [postForm]);
 
   return (
     <form className="form" onSubmit={onSubmit}>
