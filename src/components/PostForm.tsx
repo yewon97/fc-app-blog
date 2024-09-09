@@ -12,8 +12,8 @@ type PostFormProps = {
 };
 
 export default function PostForm() {
-  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
 
   const [postForm, setPostForm] = useState<PostFormProps>({
     title: "",
