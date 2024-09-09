@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { AuthContext } from "@/context/AuthContext";
+import { db } from "@/firebaseApp";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 type Props = {
@@ -7,8 +10,34 @@ type Props = {
 
 type TabType = "all" | "my";
 
+interface PostProps {
+  id: string;
+  title: string;
+  summary: string;
+  content: string;
+  createAt: string;
+  email: string;
+}
+
 export default function PostList({ hasNavigation = true }: Props) {
+  const { user } = useContext(AuthContext);
+
   const [activeTab, setActiveTab] = useState<TabType>("all");
+
+  const [posts, setPosts] = useState<PostProps[]>([]);
+
+  const getPosts = async () => {
+    const snapshot = collection(db, "posts");
+    const docs = await getDocs(snapshot);
+    const dataObj = docs.docs.map(
+      (doc) => ({ id: doc.id, ...doc.data() } as PostProps),
+    );
+    setPosts((prev) => [...prev, ...dataObj]);
+  };
+
+  useEffect(() => {
+    getPosts();
+  }, []);
 
   return (
     <>
@@ -35,28 +64,29 @@ export default function PostList({ hasNavigation = true }: Props) {
       )}
 
       <div className="post__list">
-        {[...Array(11)].map((e, idx) => (
-          <div key={idx} className="post__box">
-            <Link to={`/posts/${idx}`}>
-              <div className="post__profile-box">
-                <div className="post__profile"></div>
-                <div className="post__author-name">패스트캠퍼스</div>
-                <div className="post__date">2023.08.09 토요일</div>
+        {posts?.length > 0
+          ? posts?.map((post, idx) => (
+              <div key={post.id} className="post__box">
+                <Link to={`/posts/${post.id}`}>
+                  <div className="post__profile-box">
+                    <div className="post__profile"></div>
+                    <div className="post__author-name">{post.email}</div>
+                    <div className="post__date">{post.createAt}</div>
+                  </div>
+                  <div className="post__title">{post.title}</div>
+                  <div className="post__text">{post.content}</div>
+                </Link>
+                {post.email === user?.email && (
+                  <div className="post__utils-box">
+                    <div className="post__delete">삭제</div>
+                    <div className="post__edit">
+                      <Link to={`/posts/edit/${post.id}`}>수정</Link>
+                    </div>
+                  </div>
+                )}
               </div>
-              <div className="post__title">게시글 {idx}</div>
-              <div className="post__text">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero
-                autem sit sequi similique unde officia eius consequatur, maxime
-                reiciendis incidunt odio aliquid soluta, quod, consequuntur
-                voluptatibus exercitationem quis aut obcaecati!
-              </div>
-              <div className="post__utils-box">
-                <div className="post__delete">삭제</div>
-                <div className="post__edit">수정</div>
-              </div>
-            </Link>
-          </div>
-        ))}
+            ))
+          : "게시글이 없습니다."}
       </div>
     </>
   );
