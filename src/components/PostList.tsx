@@ -10,13 +10,15 @@ type Props = {
 
 type TabType = "all" | "my";
 
-interface PostProps {
+export interface PostProps {
   id: string;
   title: string;
   summary: string;
   content: string;
-  createAt: string;
+  createdAt: string;
+  updatedAt: string;
   email: string;
+  uid: string;
 }
 
 export default function PostList({ hasNavigation = true }: Props) {
@@ -71,7 +73,7 @@ export default function PostList({ hasNavigation = true }: Props) {
                   <div className="post__profile-box">
                     <div className="post__profile"></div>
                     <div className="post__author-name">{post.email}</div>
-                    <div className="post__date">{post.createAt}</div>
+                    <div className="post__date">{post.createdAt}</div>
                   </div>
                   <div className="post__title">{post.title}</div>
                   <div className="post__text">{post.summary}</div>

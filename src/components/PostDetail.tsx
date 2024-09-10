@@ -4,15 +4,7 @@ import { db } from "@/firebaseApp";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import Loader from "@/components/Loader";
-
-interface PostProps {
-  id: string;
-  title: string;
-  summary: string;
-  content: string;
-  createAt: string;
-  email: string;
-}
+import { PostProps } from "@/components/PostList";
 
 export default function PostDetail() {
   const { user } = useContext(AuthContext);
@@ -47,7 +39,7 @@ export default function PostDetail() {
             <div className="post__profile-box">
               <div className="post__profile"></div>
               <div className="post__author-name">{post?.email}</div>
-              <div className="post__date">{post?.createAt}</div>
+              <div className="post__date">{post?.createdAt}</div>
             </div>
             {post?.email === user?.email && (
               <div className="post__utils-box">
