@@ -131,6 +131,15 @@ footer {
   margin: 14px 0;
 }
 
+.post__category {
+  color: gray;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border: 1px solid #979797;
+  border-radius: 20px;
+}
+
 .post__text {
   color: gray;
   font-size: 16px;

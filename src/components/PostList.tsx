@@ -17,10 +17,18 @@ import { toast } from "react-toastify";
 
 type Props = {
   hasNavigation?: boolean;
-  defaultTab?: TabType;
+  defaultTab?: TabType | CategoryType;
 };
 
 type TabType = "all" | "my";
+
+export type CategoryType = "Frontend" | "Backend" | "Web" | "Native";
+export const CATEGORIES: CategoryType[] = [
+  "Frontend",
+  "Backend",
+  "Web",
+  "Native",
+];
 
 export interface PostProps {
   id: string;
@@ -31,6 +39,7 @@ export interface PostProps {
   updatedAt: string;
   email: string;
   uid: string;
+  category?: CategoryType;
 }
 
 export default function PostList({
@@ -39,7 +48,9 @@ export default function PostList({
 }: Props) {
   const { user } = useContext(AuthContext);
 
-  const [activeTab, setActiveTab] = useState<TabType>(defaultTab);
+  const [activeTab, setActiveTab] = useState<TabType | CategoryType>(
+    defaultTab,
+  );
 
   const [posts, setPosts] = useState<PostProps[]>([]);
 
@@ -51,13 +62,22 @@ export default function PostList({
       let postsQuery;
 
       if (activeTab === "my" && user) {
+        // 나의 글 탭
         postsQuery = query(
           snapshot,
           where("uid", "==", user?.uid),
           orderBy("createdAt", "asc"),
         );
       } else if (activeTab === "all") {
+        // 전체 탭
         postsQuery = query(snapshot, orderBy("createdAt", "asc"));
+      } else {
+        // 카테고리 탭
+        postsQuery = query(
+          snapshot,
+          where("category", "==", activeTab),
+          orderBy("createdAt", "asc"),
+        );
       }
 
       const docs = await getDocs(
@@ -111,6 +131,18 @@ export default function PostList({
             >
               나의 글
             </div>
+            {CATEGORIES.map((category) => (
+              <div
+                key={category}
+                role="presentation"
+                onClick={() => setActiveTab(category)}
+                className={
+                  activeTab === category ? "post__navigation--active" : ""
+                }
+              >
+                {category}
+              </div>
+            ))}
           </div>
           <hr className="line-gray" />
         </>

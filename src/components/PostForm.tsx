@@ -1,4 +1,4 @@
-import { PostProps } from "@/components/PostList";
+import { CATEGORIES, PostProps } from "@/components/PostList";
 import { AuthContext } from "@/context/AuthContext";
 import { db } from "@/firebaseApp";
 import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
@@ -10,6 +10,7 @@ type PostFormProps = {
   title: string;
   summary: string;
   content: string;
+  category: string;
 };
 
 export default function PostForm() {
@@ -35,6 +36,7 @@ export default function PostForm() {
 
   const [postForm, setPostForm] = useState<PostFormProps>({
     title: "",
+    category: "",
     summary: "",
     content: "",
   });
@@ -44,13 +46,16 @@ export default function PostForm() {
 
     setPostForm({
       title: post?.title,
+      category: post?.category || "",
       summary: post?.summary,
       content: post?.content,
     });
   }, [post]);
 
   const onChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     const { name, value } = e.target;
     setPostForm({ ...postForm, [name]: value });
@@ -107,6 +112,22 @@ export default function PostForm() {
           onChange={onChange}
           value={postForm?.title}
         />
+      </div>
+      <div className="form__block">
+        <label htmlFor="category">카테고리</label>
+        <select
+          name="category"
+          id="category"
+          onChange={onChange}
+          value={postForm?.category}
+        >
+          <option value="">카테고리를 선택해주세요.</option>
+          {CATEGORIES.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
       </div>
       <div className="form__block">
         <label htmlFor="summary">요약</label>
