@@ -65,7 +65,11 @@ export default function PostForm() {
         const postRef = doc(db, "posts", post?.id);
         await updateDoc(postRef, {
           ...postForm,
-          updatedAt: new Date()?.toLocaleDateString(),
+          updatedAt: new Date()?.toLocaleDateString("ko-KR", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          }),
         });
         toast.success("게시글이 성공적으로 수정되었습니다.");
         navigate(`/posts/${post?.id}`);
@@ -73,7 +77,11 @@ export default function PostForm() {
         // 게시글 작성
         await addDoc(collection(db, "posts"), {
           ...postForm,
-          createdAt: new Date()?.toLocaleDateString(),
+          createdAt: new Date()?.toLocaleDateString("ko-KR", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          }),
           email: user?.email,
           uid: user?.uid,
         });
