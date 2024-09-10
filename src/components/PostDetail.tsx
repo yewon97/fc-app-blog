@@ -1,12 +1,15 @@
-import { Link, useParams } from "react-router-dom";
-import { getDoc, doc } from "firebase/firestore";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { getDoc, doc, deleteDoc } from "firebase/firestore";
 import { db } from "@/firebaseApp";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import Loader from "@/components/Loader";
 import { PostProps } from "@/components/PostList";
+import { toast } from "react-toastify";
 
 export default function PostDetail() {
+  const navigate = useNavigate();
+
   const { user } = useContext(AuthContext);
   const params = useParams();
 
@@ -26,8 +29,19 @@ export default function PostDetail() {
     if (params?.id) getPost(params?.id);
   }, [params?.id]);
 
-  const handleDelete = () => {
-    console.log("delete");
+  const handleDelete = async () => {
+    const confirm = window.confirm("해당 게시글을 정말로 삭제하시겠습니까?");
+    if (!confirm || !post || !post?.id) return;
+
+    try {
+      const docRef = doc(db, "posts", post?.id);
+      await deleteDoc(docRef);
+      toast.success("게시글이 성공적으로 삭제되었습니다.");
+      navigate("/");
+    } catch (error: any) {
+      console.error(error);
+      toast.error("게시글 삭제에 실패했습니다.");
+    }
   };
 
   return (

@@ -1,8 +1,9 @@
 import { AuthContext } from "@/context/AuthContext";
 import { db } from "@/firebaseApp";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 type Props = {
   hasNavigation?: boolean;
@@ -29,12 +30,34 @@ export default function PostList({ hasNavigation = true }: Props) {
   const [posts, setPosts] = useState<PostProps[]>([]);
 
   const getPosts = async () => {
-    const snapshot = collection(db, "posts");
-    const docs = await getDocs(snapshot);
-    const dataObj = docs.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() } as PostProps),
-    );
-    setPosts((prev) => [...prev, ...dataObj]);
+    setPosts([]);
+
+    try {
+      const snapshot = collection(db, "posts");
+      const docs = await getDocs(snapshot);
+      const dataObj = docs.docs.map(
+        (doc) => ({ id: doc.id, ...doc.data() } as PostProps),
+      );
+      setPosts(dataObj);
+    } catch (error: any) {
+      console.error("게시글을 불러오는 데 실패했습니다.", error);
+      toast.error("게시글을 불러오는 데 실패했습니다.");
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    const confirm = window.confirm("해당 게시글을 정말로 삭제하시겠습니까?");
+    if (!confirm || !id) return;
+
+    try {
+      const docRef = doc(db, "posts", id);
+      await deleteDoc(docRef);
+      toast.success("게시글이 성공적으로 삭제되었습니다.");
+      getPosts();
+    } catch (error: any) {
+      console.error("게시글 삭제에 실패했습니다.", error);
+      toast.error("게시글 삭제에 실패했습니다.");
+    }
   };
 
   useEffect(() => {
@@ -80,7 +103,13 @@ export default function PostList({ hasNavigation = true }: Props) {
                 </Link>
                 {post.email === user?.email && (
                   <div className="post__utils-box">
-                    <div className="post__delete">삭제</div>
+                    <div
+                      className="post__delete"
+                      role="presentation"
+                      onClick={() => handleDelete(post.id)}
+                    >
+                      삭제
+                    </div>
                     <div className="post__edit">
                       <Link to={`/posts/edit/${post.id}`}>수정</Link>
                     </div>
