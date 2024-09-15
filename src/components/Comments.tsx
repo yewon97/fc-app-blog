@@ -3,6 +3,7 @@ import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebaseApp";
 import { AuthContext } from "@/context/AuthContext";
 import { toast } from "react-toastify";
+import { PostProps } from "@/components/PostList";
 
 const COMMENTS = [
   {
@@ -38,10 +39,10 @@ const COMMENTS = [
 ];
 
 interface CommentsProps {
-  postId: string;
+  post: PostProps;
 }
 
-export default function Comments({ postId }: CommentsProps) {
+export default function Comments({ post }: CommentsProps) {
   const { user } = useContext(AuthContext);
   const [comment, setComment] = useState("");
 
@@ -49,8 +50,8 @@ export default function Comments({ postId }: CommentsProps) {
     e.preventDefault();
 
     try {
-      if (!postId) return;
-      const postRef = doc(db, "posts", postId);
+      if (!post || !post.id) return;
+      const postRef = doc(db, "posts", post.id);
 
       if (user?.uid) {
         const commentObj = {
