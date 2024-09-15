@@ -30,6 +30,13 @@ export const CATEGORIES: CategoryType[] = [
   "Native",
 ];
 
+export interface CommentsInterface {
+  uid: string;
+  email?: string;
+  content: string;
+  createdAt: string;
+}
+
 export interface PostProps {
   id: string;
   title: string;
@@ -40,6 +47,7 @@ export interface PostProps {
   email: string;
   uid: string;
   category?: CategoryType;
+  comments?: CommentsInterface[];
 }
 
 export default function PostList({

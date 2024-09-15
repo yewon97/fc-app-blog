@@ -1,48 +1,16 @@
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebaseApp";
 import { AuthContext } from "@/context/AuthContext";
 import { toast } from "react-toastify";
 import { PostProps } from "@/components/PostList";
 
-const COMMENTS = [
-  {
-    id: 1,
-    email: "test@gmail.com",
-    content: "This is a comment",
-    createdAt: "2024-02-20",
-  },
-  {
-    id: 2,
-    email: "user1@example.com",
-    content: "좋은 글이네요. 감사합니다!",
-    createdAt: "2024-02-21",
-  },
-  {
-    id: 3,
-    email: "user2@example.com",
-    content: "이 주제에 대해 더 자세히 알고 싶어요.",
-    createdAt: "2024-02-22",
-  },
-  {
-    id: 4,
-    email: "user3@example.com",
-    content: "정말 유익한 정보였습니다.",
-    createdAt: "2024-02-23",
-  },
-  {
-    id: 5,
-    email: "user4@example.com",
-    content: "다음 글도 기대하고 있겠습니다!",
-    createdAt: "2024-02-24",
-  },
-];
-
 interface CommentsProps {
   post: PostProps;
+  getPost: (id: string) => Promise<void>;
 }
 
-export default function Comments({ post }: CommentsProps) {
+export default function Comments({ post, getPost }: CommentsProps) {
   const { user } = useContext(AuthContext);
   const [comment, setComment] = useState("");
 
@@ -55,8 +23,9 @@ export default function Comments({ post }: CommentsProps) {
 
       if (user?.uid) {
         const commentObj = {
+          uid: user?.uid,
           content: comment,
-          email: user?.email,
+          email: user.email,
           createdAt: new Date().toLocaleDateString("ko-KR", {
             hour: "2-digit",
             minute: "2-digit",
@@ -72,6 +41,7 @@ export default function Comments({ post }: CommentsProps) {
             second: "2-digit",
           }),
         });
+        getPost(post.id);
       }
       toast.success("댓글 작성 성공");
       setComment("");
@@ -80,6 +50,11 @@ export default function Comments({ post }: CommentsProps) {
       toast.error("댓글 작성 실패");
     }
   };
+
+  const reversedComments = useMemo(
+    () => post?.comments?.slice().reverse(),
+    [post?.comments],
+  );
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setComment(e.target.value);
@@ -106,8 +81,8 @@ export default function Comments({ post }: CommentsProps) {
         </div>
       </form>
       <div className="comments__list">
-        {COMMENTS?.map((comment) => (
-          <div key={comment.id} className="comment__box">
+        {reversedComments?.map((comment) => (
+          <div key={comment.createdAt} className="comment__box">
             <div className="comment__profile-box">
               <div className="comment__email">{comment.email}</div>
               <div className="comment__date">{comment.createdAt}</div>
