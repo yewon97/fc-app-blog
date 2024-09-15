@@ -1,9 +1,9 @@
 import { useContext, useMemo, useState } from "react";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebaseApp";
 import { AuthContext } from "@/context/AuthContext";
 import { toast } from "react-toastify";
-import { PostProps } from "@/components/PostList";
+import { CommentsInterface, PostProps } from "@/components/PostList";
 
 interface CommentsProps {
   post: PostProps;
@@ -60,6 +60,24 @@ export default function Comments({ post, getPost }: CommentsProps) {
     setComment(e.target.value);
   };
 
+  const handleDeleteComment = async (comment: CommentsInterface) => {
+    const confirm = window.confirm("해당 댓글을 정말로 삭제하시겠습니까?");
+    try {
+      if (!confirm || !post || !post.id) return;
+
+      const postRef = doc(db, "posts", post.id);
+      await updateDoc(postRef, {
+        comments: arrayRemove(comment),
+      });
+
+      toast.success("댓글 삭제 성공");
+      getPost(post.id);
+    } catch (error) {
+      console.error(error);
+      toast.error("댓글 삭제 실패");
+    }
+  };
+
   return (
     <div className="comments">
       <form className="comments__form" onSubmit={handleSubmit}>
@@ -86,7 +104,16 @@ export default function Comments({ post, getPost }: CommentsProps) {
             <div className="comment__profile-box">
               <div className="comment__email">{comment.email}</div>
               <div className="comment__date">{comment.createdAt}</div>
-              <div className="comment__delete">삭제</div>
+              {comment.uid === user?.uid && (
+                <div
+                  className="comment__delete"
+                  onClick={() => {
+                    handleDeleteComment(comment);
+                  }}
+                >
+                  삭제
+                </div>
+              )}
             </div>
             <div className="comment__text">{comment.content}</div>
           </div>
