@@ -1,4 +1,8 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { db } from "@/firebaseApp";
+import { AuthContext } from "@/context/AuthContext";
+import { toast } from "react-toastify";
 
 const COMMENTS = [
   {
@@ -33,12 +37,47 @@ const COMMENTS = [
   },
 ];
 
-export default function Comments() {
+interface CommentsProps {
+  postId: string;
+}
+
+export default function Comments({ postId }: CommentsProps) {
+  const { user } = useContext(AuthContext);
   const [comment, setComment] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(comment);
+
+    try {
+      if (!postId) return;
+      const postRef = doc(db, "posts", postId);
+
+      if (user?.uid) {
+        const commentObj = {
+          content: comment,
+          email: user?.email,
+          createdAt: new Date().toLocaleDateString("ko-KR", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          }),
+        };
+
+        await updateDoc(postRef, {
+          comments: arrayUnion(commentObj),
+          updateDated: new Date().toLocaleDateString("ko-KR", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          }),
+        });
+      }
+      toast.success("댓글 작성 성공");
+      setComment("");
+    } catch (error) {
+      console.error(error);
+      toast.error("댓글 작성 실패");
+    }
   };
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
